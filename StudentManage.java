@@ -12,6 +12,11 @@ public class StudentManage extends JFrame implements ActionListener {
 	JTable bg;
 	JScrollPane gd;
 	
+	Vector Title,xiang;
+	PreparedStatement ps=null;
+	Connection ct=null;
+	ResultSet rs=null;
+	
 	public static void main(String[] args){
 		StudentManage xx=new StudentManage();
 	}
@@ -39,13 +44,70 @@ public class StudentManage extends JFrame implements ActionListener {
 		String[] means={"高数","java","英语","体育"};
 		wbk1=new JTextField(10);
 		wbk2=new JTextField(5);
-		bg=new JTable();
-		gd=new JScrollPane(bg);
 		xlk=new JComboBox(means);
 		
 		mb1=new JPanel();
 		mb1.setLayout(new FlowLayout(FlowLayout.LEFT));
 		mb1.add(bq1); mb1.add(bq2); mb1.add(wbk1); mb1.add(an1);
+		
+		Title=new Vector();
+		Title.add("学号");
+		Title.add("姓名");
+		Title.add("性别");
+		Title.add("数学成绩");
+		Title.add("java成绩");
+		Title.add("英语成绩");
+		Title.add("体育成绩");
+		
+		xiang=new Vector();
+		
+		try
+		{
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			ct=DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=transcript","sa","gzx254052834843");
+			ps=ct.prepareStatement("select * from data");
+			rs=ps.executeQuery();
+			
+			while(rs.next())
+			{
+				Vector hang=new Vector();
+				hang.add(rs.getInt(1));
+				hang.add(rs.getString(2));
+				hang.add(rs.getString(3));
+				hang.add(rs.getDouble(4));
+				hang.add(rs.getDouble(5));
+				hang.add(rs.getDouble(6));
+				hang.add(rs.getDouble(7));
+				xiang.add(hang);
+			}
+			
+			ps=ct.prepareStatement("select count(*) from data");
+			rs=ps.executeQuery();
+			rs.next();
+			String renshu;
+			renshu=rs.getString(1);
+			wbk2.setText(renshu);
+		}catch(Exception e){}
+		finally
+		{
+			try{
+				if(rs!=null)
+				{
+					rs.close();
+				}
+				if(ps!=null)
+				{
+					ps.close();
+				}
+				if(ct!=null)
+				{
+					ct.close();
+				}
+			}
+			catch(Exception e){}
+		}
+		bg=new JTable(xiang,Title);
+		gd=new JScrollPane(bg);
 		
 		mb2=new JPanel();
 		mb2.setLayout(new GridLayout(8,1,2,20));
