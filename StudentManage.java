@@ -48,7 +48,7 @@ public class StudentManage extends JFrame implements ActionListener {
 		mb1.add(bq1); mb1.add(bq2); mb1.add(wbk1); mb1.add(an1);
 		
 		mb2=new JPanel();
-		mb2.setLayout(new GridLayout(8,1));
+		mb2.setLayout(new GridLayout(8,1,2,20));
 		mb2.add(bq3); mb2.add(an5); mb2.add(xlk); mb2.add(an2); mb2.add(an3); mb2.add(an4);
 		mb2.add(bq4); mb2.add(wbk2);
 		
