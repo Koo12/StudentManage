@@ -11,12 +11,12 @@ public class StudentManage extends JFrame implements ActionListener {
 	JComboBox xlk;
 	JTable bg;
 	JScrollPane gd;
-	
+
 	Vector Title,xiang;
 	PreparedStatement ps=null;
 	Connection ct=null;
 	ResultSet rs=null;
-	
+
 	public static void main(String[] args){
 		StudentManage xx=new StudentManage();
 	}
@@ -45,11 +45,11 @@ public class StudentManage extends JFrame implements ActionListener {
 		wbk1=new JTextField(10);
 		wbk2=new JTextField(5);
 		xlk=new JComboBox(means);
-		
+
 		mb1=new JPanel();
 		mb1.setLayout(new FlowLayout(FlowLayout.LEFT));
 		mb1.add(bq1); mb1.add(bq2); mb1.add(wbk1); mb1.add(an1);
-		
+
 		Title=new Vector();
 		Title.add("学号");
 		Title.add("姓名");
@@ -58,16 +58,16 @@ public class StudentManage extends JFrame implements ActionListener {
 		Title.add("java成绩");
 		Title.add("英语成绩");
 		Title.add("体育成绩");
-		
+
 		xiang=new Vector();
-		
+
 		try
 		{
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			ct=DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=transcript","sa","gzx254052834843");
 			ps=ct.prepareStatement("select * from data");
 			rs=ps.executeQuery();
-			
+
 			while(rs.next())
 			{
 				Vector hang=new Vector();
@@ -80,7 +80,7 @@ public class StudentManage extends JFrame implements ActionListener {
 				hang.add(rs.getDouble(7));
 				xiang.add(hang);
 			}
-			
+
 			ps=ct.prepareStatement("select count(*) from data");
 			rs=ps.executeQuery();
 			rs.next();
@@ -106,32 +106,44 @@ public class StudentManage extends JFrame implements ActionListener {
 			}
 			catch(Exception e){}
 		}
-		bg=new JTable(xiang,Title);
-		gd=new JScrollPane(bg);
 		
 		mb2=new JPanel();
 		mb2.setLayout(new GridLayout(8,1,2,20));
 		mb2.add(bq3); mb2.add(an5); mb2.add(xlk); mb2.add(an2); mb2.add(an3); mb2.add(an4);
 		mb2.add(bq4); mb2.add(wbk2);
+
+		bg=new JTable(xiang,Title);
+		gd=new JScrollPane(bg);
 		
 		this.add(mb1,"North");
 		this.add(mb2,"East");
 		this.add(gd);
-		
+
 		this.setTitle("学生信息管理系统");
 		this.setSize(800,600);
 		this.setLocation(500,200);
-		
+
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		this.setVisible(true);
-		
+
 	}
 	public void actionPerformed(ActionEvent e)
 	{
 		if(e.getActionCommand().equals("select"))
 		{
-			System.out.println("111");
+			String number=wbk1.getText().trim();
+			if(number.equals(""))
+			{
+				Tablemodel xx=new Tablemodel(wbk2);
+				bg.setModel(xx);
+			}
+			else
+			{
+				String sql="select * from data where number='"+number+"'";
+				Tablemodel xx=new Tablemodel(wbk2,sql);
+				bg.setModel(xx);
+			}
 		}
 		if(e.getActionCommand().equals("insert"))
 		{
