@@ -159,7 +159,31 @@ public class StudentManage extends JFrame implements ActionListener {
 		}
 		if(e.getActionCommand().equals("look"))
 		{
-			System.out.println("555");
+			Object ll=xlk.getSelectedItem();//获取下拉框中的所选项
+			if(ll.equals("高数"))
+			{
+				String sql="select * from data order by math desc";
+				Tablemodel xx=new Tablemodel(wbk2,sql);
+				bg.setModel(xx);
+			}
+			if(ll.equals("java"))
+			{
+				String sql="select * from data order by java desc";
+				Tablemodel xx=new Tablemodel(wbk2,sql);
+				bg.setModel(xx);
+			}
+			if(ll.equals("英语"))
+			{
+				String sql="select * from data order by english desc";
+				Tablemodel xx=new Tablemodel(wbk2,sql);
+				bg.setModel(xx);
+			}
+			if(ll.equals("体育"))
+			{
+				String sql="select * from data order by PE desc";
+				Tablemodel xx=new Tablemodel(wbk2,sql);
+				bg.setModel(xx);
+			}
 		}
 	}
 }
