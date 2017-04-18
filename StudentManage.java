@@ -2,6 +2,9 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+
+
 import java.sql.*;
 public class StudentManage extends JFrame implements ActionListener {
 	JPanel mb1,mb2;
@@ -147,15 +150,67 @@ public class StudentManage extends JFrame implements ActionListener {
 		}
 		if(e.getActionCommand().equals("insert"))
 		{
-			System.out.println("222");
+			Studentinsert ll=new Studentinsert(this,"添加学生信息",true);
+			Tablemodel xx=new Tablemodel(wbk2);
+			bg.setModel(xx);
 		}
 		if(e.getActionCommand().equals("update"))
 		{
-			System.out.println("333");
+			int ii=this.bg.getSelectedRow();//记录点击的行
+			if(ii==-1)
+			{
+				JOptionPane.showMessageDialog(this,"请选中要修改的行");//弹出的信息界面
+				return;//返回调用的地方
+			}
+			Tablemodel xx=new Tablemodel(wbk2);
+			Studentupdate ll=new Studentupdate(this,"修改学生信息",true,xx,ii);
+			
+			Tablemodel xx2=new Tablemodel(wbk2);
+			bg.setModel(xx2);
 		}
 		if(e.getActionCommand().equals("delete"))
 		{
-			System.out.println("444");
+			int ii=this.bg.getSelectedRow();
+			if(ii==-1)
+			{
+				JOptionPane.showMessageDialog(this,"请选中要删除的行");
+				return;
+			}
+			Tablemodel xx=new Tablemodel(wbk2);
+			int st=(int)xx.getValueAt(ii,0);//ii返回选中的行，0是第0列
+			PreparedStatement ps=null;
+			Connection ct=null;
+			ResultSet rs=null;
+			
+			
+			try
+			{
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+				ct=DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=transcript","sa","gzx254052834843");
+				ps=ct.prepareStatement("delete from data where number=?");
+				ps.setInt(1,st);
+				ps.executeQuery();
+			}catch(Exception e2){}
+			finally
+			{
+				try{
+					if(rs!=null)
+					{
+						rs.close();
+					}
+					if(ps!=null)
+					{
+						ps.close();
+					}
+					if(ct!=null)
+					{
+						ct.close();
+					}
+				}
+				catch(Exception e3){}
+			}
+			Tablemodel xx2=new Tablemodel(wbk2);
+			bg.setModel(xx2);//添加完之后就会在界面上显示出来
 		}
 		if(e.getActionCommand().equals("look"))
 		{
